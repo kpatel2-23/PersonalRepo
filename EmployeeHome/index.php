@@ -80,7 +80,7 @@
       ?>
     </section>
   </div>
-  <!-- sdgsdfggdsfgsddsfdfgfdg --> 
+  <!-- Krishna --> 
   <!-- Link to your JavaScript file -->
   <script src="script.js"></script>
 </body>
