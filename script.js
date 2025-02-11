@@ -1,10 +1,8 @@
-// function to toggle a flag icon's active state
+// Toggle the active state of a flag
 function toggleFlag(element) {
-  // toggle the active class to change color
   element.classList.toggle('active');
 }
 
-// additional dynamic behaviors can be added here
 document.addEventListener('DOMContentLoaded', function() {
-  // initialize any needed event listeners or variables here
+  // Additional dynamic behaviors can be added here if needed.
 });
