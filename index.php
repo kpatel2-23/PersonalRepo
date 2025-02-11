@@ -1,134 +1,85 @@
 <?php
-// start session for authentication
+// start session to persist data
 session_start();
 
-// dummy session assignment for demonstration
-// in a real app, assign these during login and use proper authentication
-if (!isset($_SESSION['role'])) {
-    // change to 'manager' to test manager view; default is 'employee'
-    $_SESSION['role'] = 'employee';
+// if an employee email is passed in the url, save it to session
+if (isset($_GET['employee_email'])) {
+    $_SESSION['employee_email'] = $_GET['employee_email'];
 }
+$employeeEmail = isset($_SESSION['employee_email']) ? $_SESSION['employee_email'] : 'no-email@example.com';
 
-// determine which page to show; default is employee view
-$page = isset($_GET['page']) ? $_GET['page'] : 'employee';
+// sample data for projects that this employee belongs to
+$projects = [
+    [
+        'name' => 'project alpha',
+        'team_leader' => ['name' => 'alice', 'contact' => 'alice@example.com'],
+        'manager' => ['name' => 'bob', 'contact' => 'bob@example.com']
+    ],
+    [
+        'name' => 'project beta',
+        'team_leader' => ['name' => 'charlie', 'contact' => 'charlie@example.com'],
+        'manager' => ['name' => 'david', 'contact' => 'david@example.com']
+    ]
+];
 
-// if user is not a manager but is trying to access the manager page, redirect
-if ($page === 'manager' && $_SESSION['role'] !== 'manager') {
-    header('Location: index.php');
-    exit();
-}
-
-// process form submission on the manager page
-if ($page === 'manager' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // get and trim posted form data
-    $taskName = trim($_POST['task_name']);
-    $dueDate = $_POST['due_date'];
-    $priority = (int) $_POST['priority'];
-    $prerequisites = trim($_POST['prerequisites']);
-    $flagUnderResourced = isset($_POST['flag_under_resourced']) ? 1 : 0;
-    $flagRequiresTraining = isset($_POST['flag_requires_training']) ? 1 : 0;
-    
-    // in a real application, validate, sanitize, and then save the task to a database
-    
-    // for demonstration, set a success message
-    $message = "task created successfully.";
-}
+// sample data for tasks assigned to this employee
+$tasks = [
+    [
+        'name' => 'task 1',
+        'due_date' => '2025-01-01',
+        'priority' => 5,
+        'prerequisites' => 'none'
+    ],
+    [
+        'name' => 'task 2',
+        'due_date' => '2025-01-05',
+        'priority' => 3,
+        'prerequisites' => 'task 1'
+    ]
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo ($page === 'manager') ? 'manager - create task' : 'employee - home'; ?></title>
+    <title>employee dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="container">
-        <h1><?php echo ($page === 'manager') ? 'create task' : 'employee home'; ?></h1>
+        <h1>employee dashboard</h1>
+        <p>email: <?php echo htmlspecialchars($employeeEmail); ?></p>
     </header>
     <div class="container">
-    <?php if ($page === 'manager'): ?>
-        <?php if (isset($message)): ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-        <!-- form for managers to create a task -->
-        <form method="POST" action="index.php?page=manager">
-            <!-- task name -->
-            <label for="task_name">task name:</label>
-            <input type="text" id="task_name" name="task_name" required>
-            
-            <!-- due date -->
-            <label for="due_date">due date:</label>
-            <input type="date" id="due_date" name="due_date" required>
-            
-            <!-- priority selection -->
-            <label for="priority">priority:</label>
-            <select id="priority" name="priority">
-                <option value="5">high (5)</option>
-                <option value="4">4</option>
-                <option value="3">medium (3)</option>
-                <option value="2">2</option>
-                <option value="1">low (1)</option>
-            </select>
-            
-            <!-- prerequisites input (e.g., comma-separated task ids) -->
-            <label for="prerequisites">prerequisite tasks (comma separated ids):</label>
-            <input type="text" id="prerequisites" name="prerequisites">
-            
-            <!-- flags for task attributes -->
-            <label for="flag_under_resourced">
-                <input type="checkbox" id="flag_under_resourced" name="flag_under_resourced">
-                under resourced
-            </label>
-            <label for="flag_requires_training">
-                <input type="checkbox" id="flag_requires_training" name="flag_requires_training">
-                requires more training
-            </label>
-            
-            <button type="submit">create task</button>
-        </form>
-    <?php else: ?>
-        <?php
-        // sample data for employee view; in a real app, pull this from a database
-        $totalTasks = 10;
-        $completedTasks = 6;
-        $historyLog = [
-            ['task' => 'task 1', 'status' => 'completed', 'date' => '2025-01-01'],
-            ['task' => 'task 2', 'status' => 'overdue', 'date' => '2025-01-05'],
-            ['task' => 'task 3', 'status' => 'assigned', 'date' => '2025-01-10']
-        ];
-        ?>
-        <!-- analytics section for employees -->
-        <section id="analytics">
-            <h2>task analytics</h2>
-            <p>completed tasks: <?php echo $completedTasks; ?> / <?php echo $totalTasks; ?></p>
+        <!-- display projects and associated contacts -->
+        <section id="projects">
+            <h2>projects</h2>
+            <?php foreach ($projects as $project): ?>
+                <div class="project-card">
+                    <h3><?php echo htmlspecialchars($project['name']); ?></h3>
+                    <p>team leader: <?php echo htmlspecialchars($project['team_leader']['name']); ?> (<?php echo htmlspecialchars($project['team_leader']['contact']); ?>)</p>
+                    <p>manager: <?php echo htmlspecialchars($project['manager']['name']); ?> (<?php echo htmlspecialchars($project['manager']['contact']); ?>)</p>
+                </div>
+            <?php endforeach; ?>
         </section>
-        <!-- history log section -->
-        <section id="history">
-            <h2>task history</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>task</th>
-                        <th>status</th>
-                        <th>date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($historyLog as $log): ?>
-                        <?php 
-                        // generate a safe id based on task name
-                        $taskId = strtolower(str_replace(' ', '-', $log['task'])); 
-                        ?>
-                        <tr id="task-<?php echo $taskId; ?>">
-                            <td><?php echo $log['task']; ?></td>
-                            <td><?php echo $log['status']; ?></td>
-                            <td><?php echo $log['date']; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+
+        <!-- display tasks as cards -->
+        <section id="tasks">
+            <h2>tasks</h2>
+            <?php foreach ($tasks as $index => $task): ?>
+                <div class="task-card" id="task-<?php echo $index; ?>">
+                    <h3><?php echo htmlspecialchars($task['name']); ?></h3>
+                    <p>due date: <?php echo htmlspecialchars($task['due_date']); ?></p>
+                    <p>priority: <?php echo htmlspecialchars($task['priority']); ?></p>
+                    <p>prerequisites: <?php echo htmlspecialchars($task['prerequisites']); ?></p>
+                    <!-- flag icons to indicate under resourced or training needed -->
+                    <div class="flags">
+                        <span class="flag" data-flag="under_resourced" onclick="toggleFlag(this)">under resourced</span>
+                        <span class="flag" data-flag="training_needed" onclick="toggleFlag(this)">needs training</span>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </section>
-    <?php endif; ?>
     </div>
     <script src="script.js"></script>
 </body>

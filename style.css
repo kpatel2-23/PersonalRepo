@@ -20,61 +20,40 @@ header {
   margin-bottom: 20px;
 }
 
-/* container for central alignment */
+/* container for centering content */
 .container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* form styling */
-form {
-  margin: 20px 0;
-}
-
-form label {
-  display: block;
-  margin: 10px 0 5px;
-}
-
-form input[type="text"],
-form input[type="date"],
-form select,
-form textarea {
-  width: 100%;
-  padding: 8px;
+/* styling for project cards */
+.project-card {
   border: 1px solid #000;
-  border-radius: 4px;
+  padding: 15px;
+  margin: 10px 0;
 }
 
-form button {
-  margin-top: 10px;
-  padding: 10px 15px;
+/* styling for task cards */
+.task-card {
+  border: 1px solid #000;
+  padding: 15px;
+  margin: 10px 0;
+}
+
+/* flag icon styling */
+.flag {
+  display: inline-block;
+  border: 1px solid #000;
+  padding: 5px 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* when a flag is active, change background and text color */
+.flag.active {
   background-color: #000;
   color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-form button:hover {
-  opacity: 0.8;
-}
-
-/* table styling */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-}
-
-table th, table td {
-  border: 1px solid #000;
-  padding: 10px;
-  text-align: left;
-}
-
-/* styling for completed tasks */
-.completed {
-  background-color: #ccc;
 }
 
 /* responsive adjustments */
@@ -82,13 +61,11 @@ table th, table td {
   body {
     padding: 10px;
   }
-  form input[type="text"],
-  form input[type="date"],
-  form select,
-  form textarea {
-    padding: 6px;
+  .project-card, .task-card {
+    padding: 10px;
   }
-  form button {
-    padding: 8px 12px;
+  .flag {
+    padding: 4px 8px;
+    margin-right: 5px;
   }
 }
