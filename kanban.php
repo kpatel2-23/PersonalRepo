@@ -1,5 +1,6 @@
 <?php
 // kanban.php
+include 'db_connect.php';
 // Example tasks for the entire project
 $projectTasks = [
   ["employee" => "John Doe",  "task" => "Task 1", "status" => "In Progress"],

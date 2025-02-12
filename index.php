@@ -1,6 +1,6 @@
 <?php 
 // index.php
-
+include 'db_connect.php';
 // For demonstration, pretend these are fetched from the DB
 $employeeName = "John Doe";
 $recentActivities = [

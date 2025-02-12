@@ -1,5 +1,6 @@
 <?php
 // project.php
+include 'db_connect.php';
 // Mock project data
 $projectName = "Project A";
 $tasks = [
